@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Icon, Button, Input } from "react-native-elements";
 import { validateEmail } from "../../utils/validations";
+import { size, isEmpty } from "lodash";
 
-export default function RegisterForm() {
-
+export default function RegisterForm(props) {
+    const { toastRef } = props;
     //Uso de estados para la contraseña
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatePassword, setShowRepeatePassword] = useState(false);
@@ -13,6 +14,24 @@ export default function RegisterForm() {
 
     const onSubmit = () => {
         console.log(validateEmail(formData.email))
+        if(
+            isEmpty(formData.email) ||
+            isEmpty(formData.password) ||
+            isEmpty(formData.repeatPassword)
+        ) {
+            toastRef.current.show("Todos los campos son obligatorios");
+        }
+        else if(isEmpty(formData.email) || isEmpty(formData.password) || isEmpty(formData.repeatPassword)) {
+            console.log("Todos los campos son obligatorios");
+        } else if(!validateEmail(formData.email)) {
+            console.log("Email no valido ")
+        } else if(formData.password !== formData.repeatPassword) {
+            console.log("No son correctos")
+        } else if(size(formData.password) < 6) {
+            console.log("Tiene que tener mas de 6 caracteres")
+        } else {
+            console.log("OK")
+        }
     }
 
     const onChange = (e, type) => {
